@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { defineNuxtConfig } from 'nuxt/config'
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   future: {
@@ -8,7 +10,8 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/tailwindcss',
-    'shadcn-nuxt'
+    'shadcn-nuxt',
+    'nuxt-auth-utils'
   ],
   shadcn: {
     /**
