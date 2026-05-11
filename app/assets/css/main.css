@@ -1,97 +1,133 @@
-:root {
-  /* Light Mode Colors */
-  --bg-app: #f8fafc;
-  --bg-sidebar: #ffffff;
-  --bg-card: #ffffff;
-  --bg-header: rgba(255, 255, 255, 0.8);
-  
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-  
-  --accent-primary: #007c91; 
-  --accent-hover: #005f6e;
-  
-  --border-color: #e2e8f0;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  --status-success: #10b981;
-  --status-warning: #f59e0b;
-  --status-error: #ef4444;
-  --status-info: #3b82f6;
+@layer base {
+  :root {
+    /* Nexus Clean - Light Mode (HSL) */
+    --background: 210 40% 96.1%;
+    --foreground: 222.2 84% 4.9%;
 
-  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 191 91% 37%; /* #0891b2 */
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 191 91% 95%;
+    --accent-foreground: 191 91% 37%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 191 91% 37%;
+
+    --radius: 0.75rem;
+
+    /* Legacy compatibility for the Nexus custom classes */
+    --bg-app: hsl(var(--background));
+    --bg-sidebar: #ffffff;
+    --bg-card: hsl(var(--card));
+    --accent-primary: hsl(var(--primary));
+    --text-primary: hsl(var(--foreground));
+    --status-success: 158 79% 42%;
+    --status-warning: 38 92% 50%;
+    --status-error: 0 84% 60%;
+    --status-info: 199 89% 48%;
+  }
+
+  [data-theme="dark"] {
+    /* Nexus Pulse - Dark Mode (HSL) */
+    --background: 222.2 84% 4.9%; /* #020617 */
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 7%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 189 94% 53%; /* #22d3ee - Electric Cyan */
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 189 94% 15%;
+    --accent-foreground: 189 94% 53%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 189 94% 53%;
+
+    /* Legacy compatibility */
+    --bg-app: hsl(var(--background));
+    --bg-sidebar: #0b1120;
+    --bg-card: hsl(var(--card));
+    --accent-primary: hsl(var(--primary));
+    --text-primary: hsl(var(--foreground));
+  }
 }
 
-[data-theme="dark"] {
-  /* Dark Mode Colors */
-  --bg-app: #0b1120;
-  --bg-sidebar: #0f172a;
-  --bg-card: #1e293b;
-  --bg-header: rgba(15, 23, 42, 0.8);
-  
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  
-  --accent-primary: #38bdf8; 
-  --accent-light: rgba(56, 189, 248, 0.1);
-  --accent-hover: #7dd3fc;
-  
-  --border-color: rgba(255, 255, 255, 0.06);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background-color: var(--bg-app);
-  color: var(--text-primary);
-  font-family: var(--font-main);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease, color 0.3s ease;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
 /* Base Layout Components */
 .glass-panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  backdrop-filter: blur(8px);
+  @apply bg-card/80 border border-border rounded-xl backdrop-blur-xl shadow-sm;
 }
 
 .btn-primary {
-  background-color: var(--accent-primary);
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-bold uppercase tracking-wider cursor-pointer transition-all duration-200 inline-flex items-center justify-center;
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-1px);
+  @apply -translate-y-0.5 shadow-lg shadow-primary/20 bg-primary/90;
 }
 
-/* Typography Utilities */
-h1, h2, h3, h4 {
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
+/* Status Classes */
+.status-indicator {
+  @apply w-2 h-2 rounded-full inline-block;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.status-success { background-color: hsl(158 79% 42%); }
+.status-warning { background-color: hsl(38 92% 50%); }
+.status-error { background-color: hsl(0 84% 60%); }
+.status-info { background-color: hsl(199 89% 48%); }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  @apply w-1.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/30 rounded-full hover:bg-muted-foreground/50;
 }
