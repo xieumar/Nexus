@@ -8,5 +8,6 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt'],
   typescript: {
     strict: true
-  }
+  },
+  css: ['~/assets/css/main.css']
 })
