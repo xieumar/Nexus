@@ -16,7 +16,7 @@ watch(() => route.path, () => {
 </script>
 
 <template>
-  <div class="flex h-screen bg-slate-50 overflow-hidden text-slate-900 font-sans relative">
+  <div class="flex h-screen bg-slate-50 dark:bg-[#00252e] overflow-hidden text-slate-900 dark:text-white/90 font-sans relative transition-colors duration-300">
     <!-- Mobile Sidebar Overlay (Backdrop) -->
     <Transition name="fade">
       <div 
