@@ -180,37 +180,47 @@ const stats = computed(() => [
       </div>
 
       <!-- Activity Feed -->
-      <div class="bg-white rounded-3xl border border-slate-100 p-8 flex flex-col h-[450px]">
+      <div class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col h-[450px] shadow-sm">
         <div class="flex items-center justify-between mb-8 shrink-0">
-          <h3 class="text-lg font-bold text-slate-900">Live Activity</h3>
-          <button class="text-xs font-bold text-cyan-600 hover:underline">View All</button>
+          <h1 class="text-lg font-bold text-slate-900 dark:text-white">Live Activity</h1>
+          <button class="text-xs font-bold text-[#003d4d] dark:text-cyan-400 hover:underline">View All</button>
         </div>
-        <div class="flex-1 overflow-y-auto space-y-6 pr-2 scrollbar-hide">
-          <TransitionGroup name="list">
-            <div v-for="event in telemetry.events" :key="event.id" class="flex gap-4">
-              <div :class="cn(
-                'h-10 w-10 shrink-0 rounded-xl flex items-center justify-center',
-                event.severity === 'critical' ? 'bg-red-50 text-red-500' :
-                event.severity === 'success' ? 'bg-emerald-50 text-emerald-500' :
-                'bg-slate-50 text-slate-400'
-              )">
-                <Activity :size="18" />
-              </div>
-              <div class="flex-1 min-w-0 space-y-1">
-                <p class="text-xs font-bold text-slate-900 truncate">{{ event.message }}</p>
-                <div class="flex items-center justify-between">
-                  <span class="text-[10px] text-slate-400 font-bold uppercase">{{ event.source }}</span>
-                  <span class="text-[10px] text-slate-300">{{ new Date(event.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) }}</span>
+        
+        <!-- Virtualized Feed -->
+        <div class="flex-1 min-h-0 -mx-2">
+          <RecycleScroller
+            class="h-full px-2 custom-scrollbar"
+            :items="telemetry.events"
+            :item-size="64"
+            key-field="id"
+            v-slot="{ item }"
+          >
+            <div class="py-2">
+              <div class="flex gap-4 group">
+                <div :class="[
+                  'h-10 w-10 shrink-0 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 duration-300',
+                  item.severity === 'critical' ? 'bg-red-50 dark:bg-red-500/10 text-red-500' :
+                  item.severity === 'success' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500' :
+                  'bg-slate-50 dark:bg-white/5 text-slate-400'
+                ]">
+                  <Activity :size="18" />
+                </div>
+                <div class="flex-1 min-w-0 space-y-1">
+                  <p class="text-xs font-bold text-slate-900 dark:text-white truncate">{{ item.message }}</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] text-slate-400 dark:text-white/20 font-bold uppercase tracking-widest">{{ item.source }}</span>
+                    <span class="text-[10px] text-slate-300 dark:text-white/10">{{ new Date(item.timestamp).toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </TransitionGroup>
+          </RecycleScroller>
+        </div>
 
-          <!-- Empty State -->
-          <div v-if="telemetry.events.length === 0" class="flex flex-col items-center justify-center h-full opacity-30 text-center space-y-3">
-            <Activity :size="48" />
-            <p class="text-xs font-bold">Waiting for system logs...</p>
-          </div>
+        <!-- Empty State -->
+        <div v-if="telemetry.events.length === 0" class="flex flex-col items-center justify-center py-20 opacity-30 text-center space-y-3">
+          <Activity :size="48" />
+          <p class="text-xs font-bold">Waiting for system logs...</p>
         </div>
       </div>
     </div>
