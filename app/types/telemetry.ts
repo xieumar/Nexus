@@ -28,4 +28,6 @@ export interface TelemetryState {
   errors: MetricData;
   events: SystemEvent[];
   isStreaming: boolean;
+  historyRange: string;
+  selectedNodeId: string | null;
 }

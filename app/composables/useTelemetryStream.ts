@@ -1,54 +1,27 @@
-import { 
-  interval, 
-  map, 
-  tap, 
-  catchError, 
-  retry, 
-  throwError,
-} from 'rxjs'
 import { useTelemetryStore } from '~/stores/telemetry'
 
 export const useTelemetryStream = () => {
   const store = useTelemetryStore()
-  let subscription: any = null
+  let worker: Worker | null = null
 
-  // Watch for changes in isStreaming to automatically start/stop
-  watch(() => store.isStreaming, (isStreaming) => {
-    if (isStreaming) {
-      startStream()
-    } else {
-      stopStream()
-    }
-  })
+  const initWorker = () => {
+    if (import.meta.server) return
+    
+    // Initialize Web Worker
+    worker = new Worker(new URL('../workers/telemetry.worker.ts', import.meta.url), {
+      type: 'module'
+    })
 
-  const startStream = () => {
-    if (subscription) return
+    worker.onmessage = (e) => {
+      const { type, data, message } = e.data
 
-    // Data Simulator 2.1: Balanced 2Hz stream (500ms)
-    subscription = interval(500).pipe(
-      // Generate mock data
-      map((tick) => {
-        // Simulate a connection drop occasionally (every 200 ticks ~ 100s)
-        if (tick > 0 && tick % 200 === 0) {
-          throw new Error('Signal lost')
-        }
-
-        return {
-          cpu: 25 + Math.sin(tick / 15) * 20 + Math.random() * 30,
-          latency: 12 + Math.random() * 28,
-          throughput: 1.5 + Math.cos(tick / 40) * 1.2 + Math.random() * 1,
-          errors: Math.random() > 0.97 ? Math.floor(Math.random() * 3) + 1 : 0
-        }
-      }),
-
-      // Update store state
-      tap((data) => {
+      if (type === 'data') {
         store.updateMetric('cpu', Number(data.cpu.toFixed(1)))
         store.updateMetric('latency', Math.floor(data.latency))
         store.updateMetric('throughput', Number(data.throughput.toFixed(2)))
         store.updateMetric('errors', data.errors)
 
-        // Robust Event Generation
+        // Event Generation (Main thread still handles events for now as it's UI bound)
         if (data.errors > 0) {
           const sources = ['Node-7', 'Storage-Core', 'Edge-Alpha', 'Gateway-1']
           const msgs = [
@@ -65,49 +38,49 @@ export const useTelemetryStream = () => {
             severity: data.errors > 2 ? 'critical' : 'warning',
             source: sources[Math.floor(Math.random() * sources.length)] || 'System'
           })
-        } else if (Math.random() > 0.98) {
-          store.addEvent({
-            id: Math.random().toString(36).substring(7),
-            timestamp: Date.now(),
-            message: 'System state optimized: GC completed',
-            severity: 'success',
-            source: 'Runtime'
-          })
         }
-      }),
+      }
 
-      // Error handling & recovery
-      catchError((err) => {
-        console.error('Stream Error:', err.message)
+      if (type === 'error') {
         store.addEvent({
           id: 'err-' + Date.now(),
           timestamp: Date.now(),
-          message: `Connection lost: ${err.message}. Retrying...`,
+          message: `Connection unstable: ${message}. Attempting recovery...`,
           severity: 'critical',
           source: 'Streamer'
         })
-        return throwError(() => err)
-      }),
-      
-      // Automatic retry
-      retry({
-        count: 10,
-        delay: 3000
-      })
-    ).subscribe({
-      error: (err) => {
-        console.error('Stream permanently failed:', err)
+      }
+
+      if (type === 'fatal') {
+        console.error('Worker fatal error:', message)
         store.isStreaming = false
       }
-    })
+    }
+  }
+
+  // Watch for changes in isStreaming to automatically start/stop
+  watch(() => store.isStreaming, (isStreaming) => {
+    if (isStreaming) {
+      startStream()
+    } else {
+      stopStream()
+    }
+  })
+
+  const startStream = () => {
+    if (!worker) initWorker()
+    worker?.postMessage({ command: 'start' })
   }
 
   const stopStream = () => {
-    if (subscription) {
-      subscription.unsubscribe()
-      subscription = null
-    }
+    worker?.postMessage({ command: 'stop' })
   }
+
+  onUnmounted(() => {
+    stopStream()
+    worker?.terminate()
+    worker = null
+  })
 
   return {
     startStream,

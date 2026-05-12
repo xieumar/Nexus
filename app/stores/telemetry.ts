@@ -12,17 +12,18 @@ const INITIAL_METRIC: MetricData = {
 const MAX_HISTORY = 8000 // Support full 1h range at 2Hz (7200 points)
 
 export const useTelemetryStore = defineStore('telemetry', () => {
-  const state = reactive<TelemetryState & { historyRange: string }>({
+  const state = reactive<TelemetryState>({
     cpu: { ...INITIAL_METRIC },
     latency: { ...INITIAL_METRIC },
     throughput: { ...INITIAL_METRIC },
     errors: { ...INITIAL_METRIC },
     events: [],
     isStreaming: true,
-    historyRange: '1m'
+    historyRange: '1m',
+    selectedNodeId: null
   })
 
-  const updateMetric = (key: keyof Omit<TelemetryState, 'events' | 'isStreaming'>, value: number) => {
+  const updateMetric = (key: keyof Omit<TelemetryState, 'events' | 'isStreaming' | 'historyRange' | 'selectedNodeId'>, value: number) => {
     const metric = state[key]
     const timestamp = Date.now()
 

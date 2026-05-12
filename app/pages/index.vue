@@ -16,6 +16,9 @@ import { useTelemetryStore } from '~/stores/telemetry'
 import { useTelemetryStream } from '~/composables/useTelemetryStream'
 import { cn } from '~/lib/utils'
 import SystemPulse from '~/components/dashboard/SystemPulse.vue'
+import SystemHeatmap from '~/components/dashboard/SystemHeatmap.vue'
+import NodePerformanceRadar from '~/components/dashboard/NodePerformanceRadar.vue'
+import NodeInspector from '~/components/dashboard/NodeInspector.vue'
 
 definePageMeta({
   layout: 'dashboard'
@@ -211,6 +214,24 @@ const stats = computed(() => [
         </div>
       </div>
     </div>
+
+    <!-- Secondary Dashboard Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Heatmap View -->
+      <div class="lg:col-span-2 bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col shadow-sm">
+        <SystemHeatmap />
+      </div>
+
+      <!-- Radar View -->
+      <div class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col shadow-sm">
+        <NodePerformanceRadar />
+      </div>
+    </div>
+
+    <!-- Slide-over Inspector -->
+    <Teleport to="body">
+      <NodeInspector />
+    </Teleport>
   </div>
 </template>
 
