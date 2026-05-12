@@ -5,9 +5,25 @@ import NexusChart from './NexusChart.vue'
 const telemetry = useTelemetryStore()
 
 const chartOption = computed(() => {
-  const cpuData = telemetry.cpu.history.map(p => p.value)
-  const latencyData = telemetry.latency.history.map(p => p.value)
-  const timestamps = telemetry.cpu.history.map(p => {
+  const range = telemetry.historyRange
+  let limit = 120 // Default 1m at 2Hz
+  let sampleRate = 1
+  
+  if (range === '5m') {
+    limit = 600
+    sampleRate = 5 // Show 120 points
+  }
+  if (range === '1h') {
+    limit = 7200
+    sampleRate = 60 // Show 120 points
+  }
+
+  const cpuHistory = telemetry.cpu.history.slice(-limit).filter((_, i) => i % sampleRate === 0)
+  const latencyHistory = telemetry.latency.history.slice(-limit).filter((_, i) => i % sampleRate === 0)
+
+  const cpuData = cpuHistory.map(p => p.value)
+  const latencyData = latencyHistory.map(p => p.value)
+  const timestamps = cpuHistory.map(p => {
     return new Date(p.timestamp).toLocaleTimeString([], { hour12: false, minute: '2-digit', second: '2-digit' })
   })
 

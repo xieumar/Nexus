@@ -9,7 +9,7 @@ const INITIAL_METRIC: MetricData = {
   trend: 'neutral'
 }
 
-const MAX_HISTORY = 100 // Keep last 100 points for charts
+const MAX_HISTORY = 8000 // Support full 1h range at 2Hz (7200 points)
 
 export const useTelemetryStore = defineStore('telemetry', () => {
   const state = reactive<TelemetryState & { historyRange: string }>({
