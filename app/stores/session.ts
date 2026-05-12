@@ -31,11 +31,20 @@ export const useLocalSession = defineStore('localSession', () => {
     if (import.meta.client) {
       const saved = localStorage.getItem('nexus_session')
       if (saved) {
-        const data = JSON.parse(saved)
-        user.value = data.user
-        loggedInAt.value = new Date(data.loggedInAt)
+        try {
+          const data = JSON.parse(saved)
+          user.value = data.user
+          loggedInAt.value = new Date(data.loggedInAt)
+        } catch (e) {
+          console.error('Failed to parse session', e)
+        }
       }
     }
+  }
+
+  // Initialize immediately on the client side
+  if (import.meta.client) {
+    init()
   }
 
   const loggedIn = computed(() => !!user.value)
