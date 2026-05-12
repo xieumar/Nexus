@@ -59,21 +59,22 @@ export const useTelemetryStream = () => {
   }
 
   // Watch for changes in isStreaming to automatically start/stop
+  // immediate: true handles the initial start when the dashboard mounts
   watch(() => store.isStreaming, (isStreaming) => {
     if (isStreaming) {
-      startStream()
+      if (!worker) initWorker()
+      worker?.postMessage({ command: 'start' })
     } else {
-      stopStream()
+      worker?.postMessage({ command: 'stop' })
     }
-  })
+  }, { immediate: true })
 
   const startStream = () => {
-    if (!worker) initWorker()
-    worker?.postMessage({ command: 'start' })
+    store.isStreaming = true
   }
 
   const stopStream = () => {
-    worker?.postMessage({ command: 'stop' })
+    store.isStreaming = false
   }
 
   onUnmounted(() => {

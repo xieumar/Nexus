@@ -30,4 +30,5 @@ export interface TelemetryState {
   isStreaming: boolean;
   historyRange: string;
   selectedNodeId: string | null;
+  visibleMetrics: string[];
 }

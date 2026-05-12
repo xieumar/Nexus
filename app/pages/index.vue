@@ -29,7 +29,7 @@ const telemetry = useTelemetryStore()
 const { startStream, stopStream } = useTelemetryStream()
 
 onMounted(() => {
-  startStream()
+  // Stream starts automatically via useTelemetryStream watch
 })
 
 onUnmounted(() => {

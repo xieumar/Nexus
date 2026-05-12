@@ -20,10 +20,11 @@ export const useTelemetryStore = defineStore('telemetry', () => {
     events: [],
     isStreaming: true,
     historyRange: '1m',
-    selectedNodeId: null
+    selectedNodeId: null,
+    visibleMetrics: ['cpu', 'latency']
   })
 
-  const updateMetric = (key: keyof Omit<TelemetryState, 'events' | 'isStreaming' | 'historyRange' | 'selectedNodeId'>, value: number) => {
+  const updateMetric = (key: keyof Omit<TelemetryState, 'events' | 'isStreaming' | 'historyRange' | 'selectedNodeId' | 'visibleMetrics'>, value: number) => {
     const metric = state[key]
     const timestamp = Date.now()
 

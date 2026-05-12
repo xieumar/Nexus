@@ -4,6 +4,17 @@ import NexusChart from './NexusChart.vue'
 
 const telemetry = useTelemetryStore()
 
+const toggleMetric = (id: string) => {
+  const index = telemetry.visibleMetrics.indexOf(id)
+  if (index === -1) {
+    telemetry.visibleMetrics.push(id)
+  } else {
+    if (telemetry.visibleMetrics.length > 1) {
+      telemetry.visibleMetrics.splice(index, 1)
+    }
+  }
+}
+
 const chartOption = computed(() => {
   const range = telemetry.historyRange
   let limit = 120 // Default 1m at 2Hz
@@ -63,7 +74,7 @@ const chartOption = computed(() => {
       axisLabel: { color: '#94a3b8', fontSize: 10, fontWeight: 'bold' }
     },
     series: [
-      {
+      ...(telemetry.visibleMetrics.includes('cpu') ? [{
         name: 'CPU Load',
         type: 'line',
         smooth: true,
@@ -80,8 +91,8 @@ const chartOption = computed(() => {
           }
         },
         data: cpuData
-      },
-      {
+      }] : []),
+      ...(telemetry.visibleMetrics.includes('latency') ? [{
         name: 'Latency',
         type: 'line',
         smooth: true,
@@ -98,7 +109,7 @@ const chartOption = computed(() => {
           }
         },
         data: latencyData
-      }
+      }] : [])
     ]
   }
 })
@@ -108,14 +119,20 @@ const chartOption = computed(() => {
   <div class="h-full w-full">
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center gap-6">
-        <div class="flex items-center gap-2">
+        <button 
+          @click="toggleMetric('cpu')"
+          :class="['flex items-center gap-2 transition-all duration-300', telemetry.visibleMetrics.includes('cpu') ? 'opacity-100' : 'opacity-30']"
+        >
           <div class="h-2 w-2 rounded-full bg-cyan-500"></div>
           <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">CPU Load (%)</span>
-        </div>
-        <div class="flex items-center gap-2">
+        </button>
+        <button 
+          @click="toggleMetric('latency')"
+          :class="['flex items-center gap-2 transition-all duration-300', telemetry.visibleMetrics.includes('latency') ? 'opacity-100' : 'opacity-30']"
+        >
           <div class="h-2 w-2 rounded-full bg-amber-500"></div>
           <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Latency (ms)</span>
-        </div>
+        </button>
       </div>
       <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-100">
         <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
