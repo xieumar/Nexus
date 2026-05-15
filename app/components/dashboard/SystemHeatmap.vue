@@ -30,11 +30,11 @@ const getStatusColor = (node: typeof nodes[0]) => {
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-1">
           <div class="h-2 w-2 rounded-full bg-slate-200 dark:bg-white/10"></div>
-          <span class="text-[9px] font-bold text-slate-400 uppercase">Idle</span>
+          <span class="text-[9px] font-bold text-slate-400 dark:text-white/40 uppercase">Idle</span>
         </div>
         <div class="flex items-center gap-1">
-          <div class="h-2 w-2 rounded-full bg-[#003d4d]"></div>
-          <span class="text-[9px] font-bold text-slate-400 uppercase">Peak Load</span>
+          <div class="h-2 w-2 rounded-full bg-[#003d4d] dark:bg-cyan-500"></div>
+          <span class="text-[9px] font-bold text-slate-400 dark:text-white/40 uppercase">Peak Load</span>
         </div>
       </div>
     </div>

@@ -124,19 +124,19 @@ const chartOption = computed(() => {
           :class="['flex items-center gap-2 transition-all duration-300', telemetry.visibleMetrics.includes('cpu') ? 'opacity-100' : 'opacity-30']"
         >
           <div class="h-2 w-2 rounded-full bg-cyan-500"></div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">CPU Load (%)</span>
+          <span class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">CPU Load (%)</span>
         </button>
         <button 
           @click="toggleMetric('latency')"
           :class="['flex items-center gap-2 transition-all duration-300', telemetry.visibleMetrics.includes('latency') ? 'opacity-100' : 'opacity-30']"
         >
           <div class="h-2 w-2 rounded-full bg-amber-500"></div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Latency (ms)</span>
+          <span class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Latency (ms)</span>
         </button>
       </div>
-      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-100">
+      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
         <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-        <span class="text-[9px] font-bold text-slate-500 uppercase tracking-tighter">Live Streaming</span>
+        <span class="text-[9px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-tighter">Live Streaming</span>
       </div>
     </div>
     

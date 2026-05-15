@@ -58,12 +58,12 @@ const nodeDetails = computed(() => {
           </div>
           <div>
             <h3 class="text-lg font-bold text-slate-900 dark:text-white">Node Inspector</h3>
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ telemetry.selectedNodeId }}</p>
+            <p class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">{{ telemetry.selectedNodeId }}</p>
           </div>
         </div>
         <button 
           @click="close"
-          class="p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400 transition-colors"
+          class="p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition-colors"
         >
           <X :size="20" />
         </button>
@@ -74,19 +74,19 @@ const nodeDetails = computed(() => {
         <!-- Status Overview -->
         <div class="space-y-4">
           <div class="flex items-center justify-between">
-            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Health Status</h4>
+            <h4 class="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Health Status</h4>
             <span class="px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase">Optimal</span>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-              <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Region</p>
+              <p class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Region</p>
               <p class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Globe :size="14" class="text-blue-500" />
                 US-East-1
               </p>
             </div>
             <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-              <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Uptime</p>
+              <p class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase mb-1">Uptime</p>
               <p class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Clock :size="14" class="text-amber-500" />
                 14d 2h
@@ -97,7 +97,7 @@ const nodeDetails = computed(() => {
 
         <!-- Real-time Metrics -->
         <div class="space-y-4">
-          <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Live Metrics</h4>
+          <h4 class="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Live Metrics</h4>
           <div class="space-y-3">
             <div v-for="m in nodeDetails?.metrics" :key="m.name" class="flex items-center justify-between p-4 rounded-2xl bg-white dark:bg-[#00252e] border border-slate-100 dark:border-white/5">
               <div class="flex items-center gap-3">
@@ -112,10 +112,10 @@ const nodeDetails = computed(() => {
         <!-- Mini Logs -->
         <div class="space-y-4">
           <div class="flex items-center justify-between">
-            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Recent Node Events</h4>
-            <Terminal :size="14" class="text-slate-300" />
+            <h4 class="text-xs font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Recent Node Events</h4>
+            <Terminal :size="14" class="text-slate-300 dark:text-white/20" />
           </div>
-          <div class="rounded-2xl bg-slate-900 p-4 font-mono text-[11px] text-slate-300 space-y-2 overflow-hidden">
+          <div class="rounded-2xl bg-slate-900 dark:bg-black/20 p-4 font-mono text-[11px] text-slate-300 space-y-2 overflow-hidden">
              <p><span class="text-emerald-500">[19:42:01]</span> SSH connection accepted from 10.0.0.1</p>
              <p><span class="text-blue-500">[19:42:05]</span> Service 'nexus-api' restart triggered</p>
              <p><span class="text-emerald-500">[19:42:10]</span> Baseline check: PASS (12ms latency)</p>

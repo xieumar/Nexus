@@ -85,10 +85,10 @@ const stats = computed(() => [
   <div class="space-y-10">
     <!-- Welcome Header -->
     <div class="flex flex-col gap-1">
-      <h1 class="text-3xl font-bold text-slate-900 tracking-tight">
-        Welcome back, <span class="text-[#003d4d]">{{ session.user?.name }}</span>
+      <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+        Welcome back, <span class="text-[#003d4d] dark:text-cyan-400">{{ session.user?.name }}</span>
       </h1>
-      <p class="text-slate-500 text-sm font-medium">Here's what's happening with your telemetry systems today.</p>
+      <p class="text-slate-500 dark:text-white/40 text-sm font-medium">Here's what's happening with your telemetry systems today.</p>
     </div>
 
     <!-- Stats Grid -->
@@ -96,7 +96,7 @@ const stats = computed(() => [
       <div 
         v-for="stat in stats" 
         :key="stat.name"
-        class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300 group cursor-default"
+        class="bg-white dark:bg-[#002d39] p-6 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none transition-all duration-300 group cursor-default"
       >
         <div class="flex items-center justify-between mb-6">
           <div :class="['p-3 rounded-2xl transition-transform duration-300 group-hover:scale-110', stat.bg, stat.color]">
@@ -113,18 +113,18 @@ const stats = computed(() => [
         </div>
         
         <div class="space-y-1">
-          <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">{{ stat.name }}</p>
+          <p class="text-slate-400 dark:text-white/30 text-xs font-bold uppercase tracking-widest">{{ stat.name }}</p>
           <div class="flex items-baseline gap-2">
-            <h3 class="text-2xl font-bold text-slate-900">{{ stat.value }}</h3>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ stat.value }}</h3>
             <ArrowUpRight v-if="stat.trend === 'up'" :size="14" class="text-emerald-500" />
             <ArrowDownRight v-if="stat.trend === 'down'" :size="14" class="text-amber-500" />
           </div>
         </div>
 
         <!-- Sparkline Placeholder -->
-        <div class="mt-6 h-1 w-full bg-slate-50 rounded-full overflow-hidden">
+        <div class="mt-6 h-1 w-full bg-slate-50 dark:bg-white/5 rounded-full overflow-hidden">
           <div 
-            :class="['h-full rounded-full transition-all duration-1000', stat.color.replace('text', 'bg')]"
+            :class="cn('h-full rounded-full transition-all duration-1000', stat.color.replace('text', 'bg'))"
             :style="{ width: '60%' }"
           ></div>
         </div>
@@ -134,10 +134,10 @@ const stats = computed(() => [
     <!-- Main Dashboard Body -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Primary System Pulse Chart -->
-      <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-100 p-8 flex flex-col relative overflow-hidden group">
+      <div class="lg:col-span-2 bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col relative overflow-hidden group">
         <div class="flex items-center justify-between mb-2 shrink-0">
           <div class="flex items-center gap-2">
-            <h3 class="text-lg font-bold text-slate-900">System Telemetry</h3>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">System Telemetry</h3>
             <div :class="cn(
               'flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider transition-all duration-300',
               telemetry.isStreaming ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
@@ -149,14 +149,14 @@ const stats = computed(() => [
           
           <div class="flex items-center gap-2">
             <!-- Range Selector -->
-            <div class="flex items-center p-1 bg-slate-50 border border-slate-100 rounded-xl mr-2">
+            <div class="flex items-center p-1 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl mr-2">
               <button 
                 v-for="range in ['1m', '5m', '1h']" 
                 :key="range"
                 @click="telemetry.historyRange = range"
                 :class="cn(
                   'px-3 py-1 rounded-lg text-[10px] font-bold transition-all duration-200',
-                  telemetry.historyRange === range ? 'bg-white text-cyan-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+                  telemetry.historyRange === range ? 'bg-white dark:bg-white/10 text-cyan-600 dark:text-cyan-400 shadow-sm' : 'text-slate-400 hover:text-slate-600 dark:text-white/40 dark:hover:text-white'
                 )"
               >
                 {{ range }}
@@ -165,13 +165,13 @@ const stats = computed(() => [
 
             <button 
               @click="telemetry.setStreaming(!telemetry.isStreaming)"
-              class="p-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200"
+              class="p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200"
               :title="telemetry.isStreaming ? 'Pause Stream' : 'Resume Stream'"
             >
               <Pause v-if="telemetry.isStreaming" :size="16" />
               <Play v-else :size="16" />
             </button>
-            <button class="p-2 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200">
+            <button class="p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200">
               <Settings :size="16" />
             </button>
           </div>
