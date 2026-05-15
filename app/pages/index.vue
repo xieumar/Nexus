@@ -84,19 +84,19 @@ const stats = computed(() => [
 <template>
   <div class="space-y-10">
     <!-- Welcome Header -->
-    <div class="flex flex-col gap-1">
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+    <div class="flex flex-col gap-1 px-4 md:px-0">
+      <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight text-center md:text-left">
         Welcome back, <span class="text-[#003d4d] dark:text-cyan-400">{{ session.user?.name }}</span>
       </h1>
-      <p class="text-slate-500 dark:text-white/40 text-sm font-medium">Here's what's happening with your telemetry systems today.</p>
+      <p class="text-slate-500 dark:text-white/40 text-sm font-medium text-center md:text-left">Here's what's happening with your telemetry systems today.</p>
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 px-4 md:px-0">
       <div 
         v-for="stat in stats" 
         :key="stat.name"
-        class="bg-white dark:bg-[#002d39] p-6 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none transition-all duration-300 group cursor-default"
+        class="bg-white dark:bg-[#002d39] p-4 md:p-6 rounded-3xl border border-slate-100 dark:border-white/5 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-none transition-all duration-300 group cursor-default"
       >
         <div class="flex items-center justify-between mb-6">
           <div :class="['p-3 rounded-2xl transition-transform duration-300 group-hover:scale-110', stat.bg, stat.color]">
@@ -132,10 +132,10 @@ const stats = computed(() => [
     </div>
 
     <!-- Main Dashboard Body -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 px-4 md:px-0">
       <!-- Primary System Pulse Chart -->
-      <div class="lg:col-span-2 bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col relative overflow-hidden group">
-        <div class="flex items-center justify-between mb-2 shrink-0">
+      <div class="lg:col-span-2 bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-4 md:p-8 flex flex-col relative overflow-hidden group">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 shrink-0 gap-4">
           <div class="flex items-center gap-2">
             <h3 class="text-lg font-bold text-slate-900 dark:text-white">System Telemetry</h3>
             <div :class="cn(
@@ -147,9 +147,9 @@ const stats = computed(() => [
             </div>
           </div>
           
-          <div class="flex items-center gap-2">
+          <div class="flex items-center justify-between sm:justify-end gap-2">
             <!-- Range Selector -->
-            <div class="flex items-center p-1 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl mr-2">
+            <div class="flex items-center p-1 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl">
               <button 
                 v-for="range in ['1m', '5m', '1h']" 
                 :key="range"
@@ -163,25 +163,27 @@ const stats = computed(() => [
               </button>
             </div>
 
-            <button 
-              @click="telemetry.setStreaming(!telemetry.isStreaming)"
-              class="p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200"
-              :title="telemetry.isStreaming ? 'Pause Stream' : 'Resume Stream'"
-            >
-              <Pause v-if="telemetry.isStreaming" :size="16" />
-              <Play v-else :size="16" />
-            </button>
-            <button class="p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200">
-              <Settings :size="16" />
-            </button>
+            <div class="flex items-center gap-2">
+              <button 
+                @click="telemetry.setStreaming(!telemetry.isStreaming)"
+                class="p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200"
+                :title="telemetry.isStreaming ? 'Pause Stream' : 'Resume Stream'"
+              >
+                <Pause v-if="telemetry.isStreaming" :size="16" />
+                <Play v-else :size="16" />
+              </button>
+              <button class="p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200">
+                <Settings :size="16" />
+              </button>
+            </div>
           </div>
         </div>
         <SystemPulse />
       </div>
 
       <!-- Activity Feed -->
-      <div class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col h-[450px] shadow-sm">
-        <div class="flex items-center justify-between mb-8 shrink-0">
+      <div class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-6 md:p-8 flex flex-col h-[400px] md:h-[450px] shadow-sm">
+        <div class="flex items-center justify-between mb-6 shrink-0">
           <h1 class="text-lg font-bold text-slate-900 dark:text-white">Live Activity</h1>
           <button class="text-xs font-bold text-[#003d4d] dark:text-cyan-400 hover:underline">View All</button>
         </div>
@@ -226,14 +228,14 @@ const stats = computed(() => [
     </div>
 
     <!-- Secondary Dashboard Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 px-4 md:px-0 pb-10">
       <!-- Heatmap View -->
-      <div class="lg:col-span-2 bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col shadow-sm">
+      <div class="lg:col-span-2 bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-6 md:p-8 flex flex-col shadow-sm min-h-[350px]">
         <SystemHeatmap />
       </div>
 
       <!-- Radar View -->
-      <div class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-8 flex flex-col shadow-sm">
+      <div class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-6 md:p-8 flex flex-col shadow-sm min-h-[350px]">
         <NodePerformanceRadar />
       </div>
     </div>

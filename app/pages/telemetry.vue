@@ -28,22 +28,22 @@ const nodes = [
 <template>
   <div class="space-y-10">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-      <div class="flex flex-col gap-1">
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Telemetry Nodes</h1>
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-6 px-4 md:px-0">
+      <div class="flex flex-col gap-1 text-center sm:text-left">
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Telemetry Nodes</h1>
         <p class="text-slate-500 dark:text-white/40 text-sm font-medium">Monitor and manage distributed telemetry processing nodes.</p>
       </div>
-      <button class="p-3 rounded-2xl bg-white dark:bg-[#002d39] border border-slate-100 dark:border-white/5 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm">
+      <button class="p-3 rounded-2xl bg-white dark:bg-[#002d39] border border-slate-100 dark:border-white/5 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all shadow-sm shrink-0">
         <RefreshCw :size="20" />
       </button>
     </div>
 
     <!-- Node Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 px-4 md:px-0">
       <div 
         v-for="node in nodes" 
         :key="node.id"
-        class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-6 shadow-sm group hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-black/20 transition-all duration-300"
+        class="bg-white dark:bg-[#002d39] rounded-3xl border border-slate-100 dark:border-white/5 p-4 md:p-6 shadow-sm group hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-black/20 transition-all duration-300"
       >
         <div class="flex items-start justify-between mb-8">
           <div class="flex gap-4">
@@ -66,22 +66,22 @@ const nodes = [
           </button>
         </div>
 
-        <div class="grid grid-cols-3 gap-4">
-          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 space-y-2">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+          <div class="p-3 md:p-4 rounded-2xl bg-slate-50 dark:bg-white/5 space-y-1 md:space-y-2">
             <div class="flex items-center gap-2 text-slate-400 dark:text-white/20">
               <Cpu :size="14" />
               <span class="text-[9px] font-bold uppercase tracking-wider">CPU</span>
             </div>
             <p class="text-sm font-bold text-slate-800 dark:text-white">{{ node.cpu }}</p>
           </div>
-          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 space-y-2">
+          <div class="p-3 md:p-4 rounded-2xl bg-slate-50 dark:bg-white/5 space-y-1 md:space-y-2">
             <div class="flex items-center gap-2 text-slate-400 dark:text-white/20">
               <HardDrive :size="14" />
               <span class="text-[9px] font-bold uppercase tracking-wider">RAM</span>
             </div>
             <p class="text-sm font-bold text-slate-800 dark:text-white">{{ node.ram }}</p>
           </div>
-          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-white/5 space-y-2">
+          <div class="p-3 md:p-4 rounded-2xl bg-slate-50 dark:bg-white/5 space-y-1 md:space-y-2">
             <div class="flex items-center gap-2 text-slate-400 dark:text-white/20">
               <Network :size="14" />
               <span class="text-[9px] font-bold uppercase tracking-wider">Net</span>

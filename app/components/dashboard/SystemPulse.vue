@@ -117,8 +117,8 @@ const chartOption = computed(() => {
 
 <template>
   <div class="h-full w-full">
-    <div class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+      <div class="flex flex-wrap items-center gap-4 md:gap-6">
         <button 
           @click="toggleMetric('cpu')"
           :class="['flex items-center gap-2 transition-all duration-300', telemetry.visibleMetrics.includes('cpu') ? 'opacity-100' : 'opacity-30']"
@@ -134,13 +134,13 @@ const chartOption = computed(() => {
           <span class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Latency (ms)</span>
         </button>
       </div>
-      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10">
+      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 shrink-0">
         <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
         <span class="text-[9px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-tighter">Live Streaming</span>
       </div>
     </div>
     
-    <div class="h-[340px] w-full">
+    <div class="h-[240px] sm:h-[340px] w-full">
       <NexusChart :option="chartOption" />
     </div>
   </div>
