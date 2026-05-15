@@ -35,21 +35,11 @@ const { toggleTheme, isDark } = useTheme()
           @focus="isSearchFocused = true"
           @blur="isSearchFocused = false"
         />
-        <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm shrink-0">
-          <Command :size="10" class="text-slate-400 dark:text-white/40" />
-          <span class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase">K</span>
-        </div>
       </div>
     </div>
 
-    <!-- Right: Status & Actions -->
+    <!-- Right: Actions -->
     <div class="flex items-center gap-6">
-      <!-- System Status -->
-      <div class="hidden md:flex items-center gap-2.5 px-4 py-2 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5">
-        <div class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-        <span class="text-[11px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-wider">Status: <span class="text-slate-800 dark:text-white/80">{{ systemStatus }}</span></span>
-      </div>
-
       <!-- Action Buttons -->
       <div class="flex items-center gap-3">
         <button class="relative p-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white border border-transparent hover:border-slate-100 dark:hover:border-white/10">
@@ -65,13 +55,6 @@ const { toggleTheme, isDark } = useTheme()
         </button>
       </div>
 
-      <!-- Divider -->
-      <div class="h-8 w-px bg-slate-100 dark:bg-white/10 mx-2"></div>
-
-      <!-- Quick Launch Button -->
-      <button class="flex items-center gap-2 bg-[#003d4d] text-white px-5 py-2.5 rounded-xl text-xs font-bold hover:bg-[#002d39] transition-all shadow-lg shadow-[#003d4d]/10 hover:-translate-y-0.5 active:translate-y-0">
-        Launch Terminal
-      </button>
     </div>
   </header>
 </template>
