@@ -9,16 +9,19 @@ import {
   ArrowDownRight,
   Activity,
   Pause,
-  Play
+  Play,
+  Settings
 } from 'lucide-vue-next'
 import { useLocalSession } from '~/stores/session'
 import { useTelemetryStore } from '~/stores/telemetry'
 import { useTelemetryStream } from '~/composables/useTelemetryStream'
 import { cn } from '~/lib/utils'
+import { useMagicKeys, whenever } from '@vueuse/core'
 import SystemPulse from '~/components/dashboard/SystemPulse.vue'
 import SystemHeatmap from '~/components/dashboard/SystemHeatmap.vue'
 import NodePerformanceRadar from '~/components/dashboard/NodePerformanceRadar.vue'
 import NodeInspector from '~/components/dashboard/NodeInspector.vue'
+import AnimatedNumber from '~/components/dashboard/AnimatedNumber.vue'
 
 definePageMeta({
   layout: 'dashboard'
@@ -37,10 +40,31 @@ onUnmounted(() => {
   // but stop if needed. For now, keep it alive for demo.
 })
 
+// Keyboard Shortcuts
+const { p, digit1, digit5, h } = useMagicKeys()
+
+whenever(p, () => {
+  telemetry.setStreaming(!telemetry.isStreaming)
+})
+
+whenever(digit1, () => {
+  telemetry.historyRange = '1m'
+})
+
+whenever(digit5, () => {
+  telemetry.historyRange = '5m'
+})
+
+whenever(h, () => {
+  telemetry.historyRange = '1h'
+})
+
 const stats = computed(() => [
   { 
     name: 'CPU Utilization', 
-    value: `${telemetry.cpu.current}%`, 
+    value: telemetry.cpu.current,
+    suffix: '%',
+    decimals: 1,
     change: telemetry.cpu.trend === 'up' ? '+1.2%' : '-0.5%', 
     trend: telemetry.cpu.trend,
     icon: Cpu, 
@@ -50,9 +74,11 @@ const stats = computed(() => [
   },
   { 
     name: 'Avg Latency', 
-    value: `${telemetry.latency.current}ms`, 
+    value: telemetry.latency.current,
+    suffix: 'ms',
+    decimals: 0,
     change: telemetry.latency.trend === 'down' ? '-2ms' : '+1ms', 
-    trend: telemetry.latency.trend === 'down' ? 'up' : 'down', // Reverse trend for latency (down is good/up)
+    trend: telemetry.latency.trend === 'down' ? 'up' : 'down', 
     icon: Zap, 
     color: 'text-amber-500', 
     bg: 'bg-amber-500/10',
@@ -60,7 +86,9 @@ const stats = computed(() => [
   },
   { 
     name: 'Network Throughput', 
-    value: `${telemetry.throughput.current} GB/s`, 
+    value: telemetry.throughput.current,
+    suffix: ' GB/s',
+    decimals: 2,
     change: '+0.12', 
     trend: telemetry.throughput.trend,
     icon: Globe, 
@@ -70,7 +98,8 @@ const stats = computed(() => [
   },
   { 
     name: 'System Errors', 
-    value: telemetry.errors.current.toString(), 
+    value: telemetry.errors.current,
+    decimals: 0,
     change: telemetry.errors.current > 0 ? '+1' : '0', 
     trend: telemetry.errors.current > 0 ? 'down' : 'neutral',
     icon: AlertTriangle, 
@@ -115,7 +144,13 @@ const stats = computed(() => [
         <div class="space-y-1">
           <p class="text-slate-400 dark:text-white/30 text-xs font-bold uppercase tracking-widest">{{ stat.name }}</p>
           <div class="flex items-baseline gap-2">
-            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ stat.value }}</h3>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
+              <AnimatedNumber 
+                :value="stat.value" 
+                :decimals="stat.decimals" 
+                :suffix="stat.suffix" 
+              />
+            </h3>
             <ArrowUpRight v-if="stat.trend === 'up'" :size="14" class="text-emerald-500" />
             <ArrowDownRight v-if="stat.trend === 'down'" :size="14" class="text-amber-500" />
           </div>

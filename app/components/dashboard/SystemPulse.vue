@@ -3,6 +3,7 @@ import { useTelemetryStore } from '~/stores/telemetry'
 import NexusChart from './NexusChart.vue'
 
 const telemetry = useTelemetryStore()
+const chartType = ref<'line' | 'bar'>('line')
 
 const toggleMetric = (id: string) => {
   const index = telemetry.visibleMetrics.indexOf(id)
@@ -76,11 +77,12 @@ const chartOption = computed(() => {
     series: [
       ...(telemetry.visibleMetrics.includes('cpu') ? [{
         name: 'CPU Load',
-        type: 'line',
-        smooth: true,
+        type: chartType.value,
+        smooth: chartType.value === 'line',
         symbol: 'none',
         lineStyle: { width: 3, color: '#06b6d4' },
-        areaStyle: {
+        itemStyle: { color: '#06b6d4' },
+        areaStyle: chartType.value === 'line' ? {
           color: {
             type: 'linear',
             x: 0, y: 0, x2: 0, y2: 1,
@@ -89,16 +91,17 @@ const chartOption = computed(() => {
               { offset: 1, color: 'rgba(6, 182, 212, 0)' }
             ]
           }
-        },
+        } : null,
         data: cpuData
       }] : []),
       ...(telemetry.visibleMetrics.includes('latency') ? [{
         name: 'Latency',
-        type: 'line',
-        smooth: true,
+        type: chartType.value,
+        smooth: chartType.value === 'line',
         symbol: 'none',
         lineStyle: { width: 3, color: '#f59e0b' },
-        areaStyle: {
+        itemStyle: { color: '#f59e0b' },
+        areaStyle: chartType.value === 'line' ? {
           color: {
             type: 'linear',
             x: 0, y: 0, x2: 0, y2: 1,
@@ -107,7 +110,7 @@ const chartOption = computed(() => {
               { offset: 1, color: 'rgba(245, 158, 11, 0)' }
             ]
           }
-        },
+        } : null,
         data: latencyData
       }] : [])
     ]
@@ -134,9 +137,27 @@ const chartOption = computed(() => {
           <span class="text-[10px] font-bold text-slate-400 dark:text-white/40 uppercase tracking-widest">Latency (ms)</span>
         </button>
       </div>
-      <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 shrink-0">
-        <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-        <span class="text-[9px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-tighter">Live Streaming</span>
+      
+      <div class="flex items-center gap-4">
+        <!-- Chart Type Switcher -->
+        <div class="flex items-center p-1 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl">
+          <button 
+            v-for="type in (['line', 'bar'] as const)" 
+            :key="type"
+            @click="chartType = type"
+            :class="[
+              'px-3 py-1 rounded-lg text-[9px] font-bold uppercase transition-all duration-200',
+              chartType === type ? 'bg-white dark:bg-white/10 text-cyan-600 dark:text-cyan-400 shadow-sm' : 'text-slate-400 dark:text-white/30 hover:text-slate-600 dark:hover:text-white'
+            ]"
+          >
+            {{ type }}
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 shrink-0">
+          <div class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span class="text-[9px] font-bold text-slate-500 dark:text-white/40 uppercase tracking-tighter">Live</span>
+        </div>
       </div>
     </div>
     
