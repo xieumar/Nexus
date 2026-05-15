@@ -9,12 +9,14 @@ import { Checkbox } from '~/components/ui/checkbox'
 import { cn } from '~/lib/utils'
 import { db } from '~/lib/db'
 import { useLocalSession } from '~/stores/session'
+import { useToastStore } from '~/stores/toasts'
 
 definePageMeta({
   layout: 'auth'
 })
 
 const session = useLocalSession()
+const toast = useToastStore()
 const isLoading = ref(false)
 const serverError = ref<string | null>(null)
 const showPassword = ref(false)
@@ -57,9 +59,11 @@ const handleLogin = handleSubmit(async (values) => {
     
     // Set local session
     session.login({ name: user.name, email: user.email })
+    toast.success(`Welcome back, ${user.name}`, 'Authentication successful.')
     navigateTo('/')
   } catch (err: any) {
     serverError.value = err.message || 'An error occurred during login'
+    toast.error('Authentication Failed', serverError.value)
   } finally {
     isLoading.value = false
   }

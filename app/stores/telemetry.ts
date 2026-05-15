@@ -62,10 +62,15 @@ export const useTelemetryStore = defineStore('telemetry', () => {
     state.isStreaming = status
   }
 
+  const clearLogs = () => {
+    state.events = []
+  }
+
   return {
     ...toRefs(state),
     updateMetric,
     addEvent,
-    setStreaming
+    setStreaming,
+    clearLogs
   }
 })

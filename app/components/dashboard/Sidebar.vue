@@ -13,11 +13,17 @@ import {
 } from 'lucide-vue-next'
 import { useLocalSession } from '~/stores/session'
 import { cn } from '~/lib/utils'
+import LogoutModal from '~/components/ui/LogoutModal.vue'
 
 defineEmits(['close'])
 
 const session = useLocalSession()
 const isCollapsed = ref(false)
+
+const openLogoutModal = () => {
+  console.log('Opening logout modal...')
+  isLogoutModalOpen.value = true
+}
 
 // We use a separate state to handle the collapse ONLY on desktop
 // On mobile, the sidebar is either visible or not, but always "expanded"
@@ -39,6 +45,8 @@ const secondaryItems = [
 const route = useRoute()
 const isActive = (path: string) => route.path === path
 
+const isLogoutModalOpen = ref(false)
+
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
 }
@@ -52,7 +60,6 @@ const toggleSidebar = () => {
       desktopCollapsed ? 'lg:w-20' : 'lg:w-64' // Desktop width
     )"
   >
-    <!-- Logo Section -->
     <div 
       @click="isCollapsed = !isCollapsed"
       :class="cn(
@@ -176,7 +183,7 @@ const toggleSidebar = () => {
           </div>
           
           <button 
-            @click="session.logout"
+            @click="openLogoutModal"
             class="p-2 rounded-lg text-white/30 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200 shrink-0"
             title="Sign Out"
           >
@@ -185,6 +192,14 @@ const toggleSidebar = () => {
         </div>
       </div>
     </div>
+
+    <!-- Logout Modal -->
+    <Teleport to="body">
+      <LogoutModal 
+        :is-open="isLogoutModalOpen" 
+        @close="isLogoutModalOpen = false" 
+      />
+    </Teleport>
   </aside>
 </template>
 

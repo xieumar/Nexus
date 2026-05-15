@@ -1,7 +1,9 @@
 import { useTelemetryStore } from '~/stores/telemetry'
+import { useToastStore } from '~/stores/toasts'
 
 export const useTelemetryStream = () => {
   const store = useTelemetryStore()
+  const toast = useToastStore()
   let worker: Worker | null = null
 
   const initWorker = () => {
@@ -38,10 +40,15 @@ export const useTelemetryStream = () => {
             severity: data.errors > 2 ? 'critical' : 'warning',
             source: sources[Math.floor(Math.random() * sources.length)] || 'System'
           })
+
+          if (data.errors > 2) {
+            toast.error('Critical System Error', msgs[Math.floor(Math.random() * msgs.length)] || 'Threshold exceeded')
+          }
         }
       }
 
       if (type === 'error') {
+        toast.warning('Connection Unstable', `Attempting recovery: ${message}`)
         store.addEvent({
           id: 'err-' + Date.now(),
           timestamp: Date.now(),
@@ -52,6 +59,7 @@ export const useTelemetryStream = () => {
       }
 
       if (type === 'fatal') {
+        toast.error('Stream Connection Lost', 'Fatal error in telemetry worker. Please refresh.')
         console.error('Worker fatal error:', message)
         store.isStreaming = false
       }

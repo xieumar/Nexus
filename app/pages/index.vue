@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ComputedRef } from 'vue'
 import { 
   Cpu, 
   Zap, 
@@ -15,6 +16,7 @@ import {
 import { useLocalSession } from '~/stores/session'
 import { useTelemetryStore } from '~/stores/telemetry'
 import { useTelemetryStream } from '~/composables/useTelemetryStream'
+import { useToastStore } from '~/stores/toasts'
 import { cn } from '~/lib/utils'
 import { useMagicKeys, whenever } from '@vueuse/core'
 import SystemPulse from '~/components/dashboard/SystemPulse.vue'
@@ -29,6 +31,7 @@ definePageMeta({
 
 const session = useLocalSession()
 const telemetry = useTelemetryStore()
+const toast = useToastStore()
 const { startStream, stopStream } = useTelemetryStream()
 
 onMounted(() => {
@@ -43,19 +46,25 @@ onUnmounted(() => {
 // Keyboard Shortcuts
 const { p, digit1, digit5, h } = useMagicKeys()
 
-whenever(p, () => {
-  telemetry.setStreaming(!telemetry.isStreaming)
+whenever(p as ComputedRef<boolean>, () => {
+  const newState = !telemetry.isStreaming
+  telemetry.setStreaming(newState)
+  if (newState) {
+    toast.success('Telemetry Stream Resumed', 'Real-time data flow is active.')
+  } else {
+    toast.warning('Telemetry Stream Paused', 'Updates are temporarily suspended.')
+  }
 })
 
-whenever(digit1, () => {
+whenever(digit1 as ComputedRef<boolean>, () => {
   telemetry.historyRange = '1m'
 })
 
-whenever(digit5, () => {
+whenever(digit5 as ComputedRef<boolean>, () => {
   telemetry.historyRange = '5m'
 })
 
-whenever(h, () => {
+whenever(h as ComputedRef<boolean>, () => {
   telemetry.historyRange = '1h'
 })
 
@@ -108,6 +117,15 @@ const stats = computed(() => [
     progress: telemetry.errors.current > 0 ? 100 : 0
   },
 ])
+const toggleStream = () => {
+  const newState = !telemetry.isStreaming
+  telemetry.setStreaming(newState)
+  if (newState) {
+    toast.success('Telemetry Stream Resumed')
+  } else {
+    toast.warning('Telemetry Stream Paused')
+  }
+}
 </script>
 
 <template>
@@ -200,7 +218,7 @@ const stats = computed(() => [
 
             <div class="flex items-center gap-2">
               <button 
-                @click="telemetry.setStreaming(!telemetry.isStreaming)"
+                @click="toggleStream"
                 class="p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all duration-200"
                 :title="telemetry.isStreaming ? 'Pause Stream' : 'Resume Stream'"
               >

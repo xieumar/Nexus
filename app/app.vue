@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useLocalSession } from '~/stores/session'
+import { useToastStore } from '~/stores/toasts'
+import Toaster from '~/components/ui/Toaster.vue'
 
 const session = useLocalSession()
+const toast = useToastStore()
 const isInitializing = ref(true)
 
 onMounted(() => {
@@ -9,6 +12,7 @@ onMounted(() => {
   // We just wait for the splash screen duration
   setTimeout(() => {
     isInitializing.value = false
+    toast.info('Terminal System Initialized', 'Nexus core services are online.')
   }, 2000)
 })
 </script>
@@ -26,6 +30,9 @@ onMounted(() => {
         <NuxtPage />
       </NuxtLayout>
     </div>
+
+    <!-- Global Toaster -->
+    <Toaster />
   </div>
 </template>
 
